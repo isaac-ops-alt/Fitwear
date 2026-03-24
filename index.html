@@ -1044,6 +1044,98 @@ section { padding: 6rem 5vw; }
   backdrop-filter: blur(4px);
 }
 .cart-backdrop.open { opacity: 1; pointer-events: all; }
+/* ============================================================
+   WISHLIST DRAWER
+   ============================================================ */
+.wishlist-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 420px;
+  background: var(--white);
+  border-left: 3px solid var(--dark);
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--transition);
+}
+.wishlist-drawer.open { transform: translateX(0); }
+.wishlist-badge {
+  background: var(--orange);
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 900;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -6px; right: -6px;
+}
+.wishlist-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--light);
+}
+.wishlist-item-img {
+  width: 70px; height: 80px;
+  background: var(--light);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.wishlist-item-img img { width:100%; height:100%; object-fit:cover; }
+.wishlist-item-info { flex:1; }
+.wishlist-item-name { font-family:var(--font-head); font-size:0.95rem; font-weight:800; text-transform:uppercase; }
+.wishlist-item-price { font-size:0.82rem; color:var(--muted); margin-top:0.2rem; }
+.wishlist-item-actions { display:flex; gap:0.4rem; margin-top:0.6rem; }
+
+/* ============================================================
+   INFO MODAL
+   ============================================================ */
+.info-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.info-modal-overlay.open { opacity: 1; pointer-events: all; }
+.info-modal-box {
+  background: var(--white);
+  border: 3px solid var(--dark);
+  max-width: 540px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+.info-modal-head {
+  background: var(--dark);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.info-modal-title {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--white);
+}
+.info-modal-body { padding: 2rem 1.8rem; }
+.info-modal-body h3 { font-family:var(--font-head); font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--orange); margin:1.2rem 0 0.4rem; }
+.info-modal-body p { font-size:0.88rem; color:var(--charcoal); line-height:1.75; font-weight:300; margin-bottom:0.6rem; }
+.info-modal-body ul { padding-left:1.2rem; margin-bottom:0.6rem; }
+.info-modal-body ul li { font-size:0.88rem; color:var(--charcoal); line-height:1.7; font-weight:300; }
+
 .cart-drawer {
   position: fixed;
   top: 0; right: 0; bottom: 0;
@@ -1647,6 +1739,11 @@ footer {
     <li><a href="#story" onclick="showPage('home')">Our Story</a></li>
   </ul>
   <div class="nav-actions">
+    <button class="nav-cart-btn" style="position:relative;" onclick="toggleWishlist()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      Wishlist
+      <span class="wishlist-badge" id="wishlist-count" style="display:none;">0</span>
+    </button>
     <button class="nav-cart-btn" onclick="toggleCart()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
       Cart
@@ -1681,6 +1778,39 @@ footer {
 </div>
 
 <!-- ============================================================
+     WISHLIST DRAWER
+     ============================================================ -->
+<div class="wishlist-drawer" id="wishlist-drawer">
+  <div class="cart-head">
+    <span class="cart-head-title">Wishlist</span>
+    <button class="cart-close-btn" onclick="toggleWishlist()">✕</button>
+  </div>
+  <div class="cart-items-list" id="wishlist-items-list">
+    <div class="cart-empty-state" id="wishlist-empty">
+      <div class="cart-empty-icon">♡</div>
+      <div class="cart-empty-text">Your wishlist is empty.<br>Save items you love!</div>
+    </div>
+  </div>
+  <div id="wishlist-foot" style="display:none;padding:1.2rem 1.5rem;border-top:3px solid var(--dark);">
+    <button class="btn btn-orange" style="width:100%;justify-content:center;" onclick="moveAllWishlistToCart()">Move All to Cart →</button>
+  </div>
+</div>
+<div class="overlay" id="wishlist-overlay" onclick="toggleWishlist()" style="z-index:1400;"></div>
+
+<!-- ============================================================
+     INFO MODAL
+     ============================================================ -->
+<div class="info-modal-overlay" id="info-modal-overlay" onclick="closeInfoModal(event)">
+  <div class="info-modal-box" id="info-modal-box">
+    <div class="info-modal-head">
+      <span class="info-modal-title" id="info-modal-title">Info</span>
+      <button class="cart-close-btn" onclick="closeInfoModalForce()">✕</button>
+    </div>
+    <div class="info-modal-body" id="info-modal-body"></div>
+  </div>
+</div>
+
+<!-- ============================================================
      PRODUCT MODAL
      ============================================================ -->
 <div class="overlay" id="product-overlay" onclick="closeProductModal(event)">
@@ -1706,6 +1836,7 @@ footer {
             <button class="qty-btn" onclick="changeQty(1)">+</button>
           </div>
           <button class="btn btn-orange" style="flex:1;justify-content:center;" onclick="addCurrentToCart()">Add to Cart</button>
+          <button class="btn btn-dark" style="padding:0.85rem 1.2rem;" id="modal-wishlist-btn" onclick="toggleWishlistItem(currentModalId)" title="Wishlist">♡</button>
         </div>
         <div class="trust-row">
           <div class="trust-item">Secure Checkout</div>
@@ -1899,15 +2030,7 @@ footer {
     <div class="story-visual">
       <div class="story-bg-num">10</div>
       <div class="story-img-box">
-        <svg viewBox="0 0 200 200" width="150" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(255,77,0,0.3)" stroke-width="3"/>
-          <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(255,77,0,0.2)" stroke-width="2"/>
-          <!-- Ball pattern lines -->
-          <path d="M100 25 Q130 60 125 100 Q120 140 100 175" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none"/>
-          <path d="M100 25 Q70 60 75 100 Q80 140 100 175" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none"/>
-          <path d="M25 100 Q60 70 100 75 Q140 80 175 100" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none"/>
-          <text x="100" y="115" text-anchor="middle" fill="rgba(255,77,0,0.6)" font-family="Barlow Condensed,sans-serif" font-size="40" font-weight="900">FW</text>
-        </svg>
+        <img src="img/logo.jpeg" alt="Fit Wear Logo" style="width:100%;height:100%;object-fit:cover;">
       </div>
     </div>
     <div class="story-text">
@@ -1993,10 +2116,9 @@ footer {
         <div class="footer-logo-txt">FIT<span> WEAR</span></div>
         <p class="footer-tagline">Gear Up, Go Beyond. Official jerseys from every major league, shipped fast across the UK.</p>
         <div class="footer-socials">
-          <a class="social-btn">IG</a>
-          <a class="social-btn">TK</a>
-          <a class="social-btn">TW</a>
-          <a class="social-btn">YT</a>
+          <a class="social-btn" href="https://www.instagram.com/fit_wear_cmr?igsh=dWtnNnc5cHg4cW03" target="_blank" title="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
         </div>
       </div>
       <div class="footer-col">
@@ -2006,27 +2128,23 @@ footer {
           <li><a href="#" onclick="filterAndShowShop('La Liga')">La Liga</a></li>
           <li><a href="#" onclick="filterAndShowShop('Bundesliga')">Bundesliga</a></li>
           <li><a href="#" onclick="filterAndShowShop('Ligue 1')">Ligue 1</a></li>
-          <li><a href="#" onclick="filterAndShowShop('Eredivisie')">Eredivisie</a></li>
           <li><a href="#" onclick="filterAndShowShop('National Teams')">National Teams</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Help</div>
         <ul>
-          <li><a href="#">Sizing Guide</a></li>
-          <li><a href="#">Delivery Info</a></li>
-          <li><a href="#">Returns</a></li>
-          <li><a href="#">Track Order</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#" onclick="openInfoModal('sizing')">Sizing Guide</a></li>
+          <li><a href="#" onclick="openInfoModal('delivery')">Delivery Info</a></li>
+          <li><a href="#" onclick="openInfoModal('returns')">Returns</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Company</div>
         <ul>
           <li><a href="#story" onclick="showPage('home')">Our Story</a></li>
-          <li><a href="#">Press</a></li>
-          <li><a href="#">Privacy</a></li>
-          <li><a href="#">Terms</a></li>
+          <li><a href="#" onclick="openInfoModal('privacy')">Privacy</a></li>
+          <li><a href="#" onclick="openInfoModal('terms')">Terms</a></li>
         </ul>
       </div>
     </div>
@@ -2580,7 +2698,8 @@ function jerseyCardHTML(j) {
         </div>
         ${badgeHtml}
         <div class="jersey-card-actions">
-          <button class="btn btn-orange" style="flex:1;justify-content:center;font-size:0.72rem;padding:0.6rem 0.8rem;" onclick="event.stopPropagation();addToCart(${j.id},'M')">+ Add to Cart</button>
+          <button class="btn btn-orange" style="flex:1;justify-content:center;font-size:0.72rem;padding:0.6rem 0.8rem;" onclick="event.stopPropagation();addToCart(${j.id},'M')">+ Cart</button>
+          <button class="btn btn-dark" style="padding:0.6rem 0.9rem;font-size:0.72rem;" onclick="event.stopPropagation();toggleWishlistItem(${j.id})" title="Add to Wishlist">♡</button>
           <button class="btn btn-dark" style="padding:0.6rem 0.9rem;font-size:0.72rem;" onclick="event.stopPropagation();openModal(${j.id})">View</button>
         </div>
       </div>
@@ -2697,12 +2816,15 @@ let currentJersey = null;
 let currentQty = 1;
 let selectedSize = 'M';
 
+let currentModalId = null;
 function openModal(id) {
   const j = jerseys.find(x => x.id === id);
   if (!j) return;
   currentJersey = j;
+  currentModalId = id;
   currentQty = 1;
   selectedSize = 'M';
+  updateModalWishlistBtn();
 
   document.getElementById('modal-img-side').style.background = `linear-gradient(135deg, ${catColors[j.league]||'#111'} 0%, ${catColors[j.league]||'#222'} 100%)`;
   if (j.img) {
@@ -2941,6 +3063,169 @@ renderLeaguePage('Bundesliga');
 renderLeaguePage('Ligue 1');
 renderLeaguePage('National Teams');
 updateCart();
+
+/* ============================================================
+   WISHLIST
+   ============================================================ */
+let wishlist = [];
+function toggleWishlist() {
+  const d = document.getElementById('wishlist-drawer');
+  const o = document.getElementById('wishlist-overlay');
+  const open = d.classList.toggle('open');
+  o.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) renderWishlist();
+}
+function toggleWishlistItem(id) {
+  const idx = wishlist.findIndex(x => x.id === id);
+  if (idx > -1) {
+    wishlist.splice(idx, 1);
+    showToast('Removed from wishlist');
+  } else {
+    const j = jerseys.find(x => x.id === id);
+    if (j) { wishlist.push(j); showToast('Added to wishlist ♡'); }
+  }
+  updateWishlistCount();
+  updateModalWishlistBtn();
+  renderWishlist();
+}
+function updateWishlistCount() {
+  const el = document.getElementById('wishlist-count');
+  if (wishlist.length > 0) { el.textContent = wishlist.length; el.style.display = 'flex'; }
+  else { el.style.display = 'none'; }
+}
+function updateModalWishlistBtn() {
+  const btn = document.getElementById('modal-wishlist-btn');
+  if (!btn || !currentModalId) return;
+  const inWl = wishlist.some(x => x.id === currentModalId);
+  btn.textContent = inWl ? '♥' : '♡';
+  btn.style.color = inWl ? 'var(--orange)' : '';
+}
+function renderWishlist() {
+  const list = document.getElementById('wishlist-items-list');
+  const empty = document.getElementById('wishlist-empty');
+  const foot = document.getElementById('wishlist-foot');
+  if (wishlist.length === 0) {
+    empty.style.display = ''; foot.style.display = 'none';
+    list.innerHTML = ''; list.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none'; foot.style.display = '';
+  list.innerHTML = wishlist.map(j => {
+    const priceStr = j.price >= 1000 ? j.price.toLocaleString() + ' XAF' : '£' + j.price;
+    const imgHtml = j.img ? `<img src="${j.img}" alt="${j.name}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:1.5rem;opacity:0.3;">⚽</div>`;
+    return `<div class="wishlist-item">
+      <div class="wishlist-item-img">${imgHtml}</div>
+      <div class="wishlist-item-info">
+        <div class="wishlist-item-name">${j.name}</div>
+        <div class="wishlist-item-price">${priceStr}</div>
+        <div class="wishlist-item-actions">
+          <button class="btn btn-orange" style="font-size:0.7rem;padding:0.4rem 0.8rem;" onclick="moveWishlistToCart(${j.id})">Move to Cart</button>
+          <button class="btn btn-dark" style="font-size:0.7rem;padding:0.4rem 0.7rem;" onclick="toggleWishlistItem(${j.id})">Remove</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function moveWishlistToCart(id) {
+  const j = jerseys.find(x => x.id === id);
+  if (j) { addToCart(id, 'M'); toggleWishlistItem(id); }
+}
+function moveAllWishlistToCart() {
+  wishlist.slice().forEach(j => addToCart(j.id, 'M'));
+  wishlist = [];
+  updateWishlistCount();
+  renderWishlist();
+  showToast('All items moved to cart!');
+}
+
+/* ============================================================
+   INFO MODAL
+   ============================================================ */
+const INFO_CONTENT = {
+  sizing: {
+    title: 'Sizing Guide',
+    body: `<p>Our jerseys follow standard sportswear sizing. Use the guide below to find your perfect fit.</p>
+      <h3>Size Chart</h3>
+      <ul>
+        <li><strong>XS</strong> — Chest: 34–36" / Waist: 28–30"</li>
+        <li><strong>S</strong> — Chest: 36–38" / Waist: 30–32"</li>
+        <li><strong>M</strong> — Chest: 38–40" / Waist: 32–34"</li>
+        <li><strong>L</strong> — Chest: 40–42" / Waist: 34–36"</li>
+        <li><strong>XL</strong> — Chest: 42–44" / Waist: 36–38"</li>
+        <li><strong>XXL</strong> — Chest: 44–46" / Waist: 38–40"</li>
+      </ul>
+      <h3>Tips</h3>
+      <p>If you're between sizes, we recommend sizing up for a relaxed matchday fit or staying true to size for a more athletic look. All jerseys are pre-washed and hold their shape.</p>`
+  },
+  delivery: {
+    title: 'Delivery Info',
+    body: `<h3>Delivery Times</h3>
+      <ul>
+        <li><strong>Standard Delivery:</strong> 3–5 business days</li>
+        <li><strong>Express Delivery:</strong> 1–2 business days</li>
+        <li><strong>International:</strong> 7–14 business days</li>
+      </ul>
+      <h3>Shipping Costs</h3>
+      <p>Free standard delivery on all orders over 60,000 XAF. Standard delivery: 3,000 XAF. Express delivery: 6,500 XAF.</p>
+      <h3>Tracking</h3>
+      <p>Once your order is dispatched, you'll receive a confirmation message with a tracking reference so you can follow your jersey every step of the way.</p>`
+  },
+  returns: {
+    title: 'Returns Policy',
+    body: `<h3>30-Day Returns</h3>
+      <p>We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in original packaging with all tags attached.</p>
+      <h3>How to Return</h3>
+      <ul>
+        <li>Contact us via Instagram with your order details</li>
+        <li>We'll confirm your return and provide a return address</li>
+        <li>Ship the item back — return shipping costs are covered by the buyer</li>
+        <li>Refunds are processed within 5 business days of receiving the item</li>
+      </ul>
+      <h3>Exchanges</h3>
+      <p>Want a different size? We'll prioritize exchanges — just mention it when you reach out.</p>`
+  },
+  privacy: {
+    title: 'Privacy Policy',
+    body: `<p>Fit Wear is committed to protecting your personal information. We only collect data necessary to process your order and improve your experience.</p>
+      <h3>What We Collect</h3>
+      <ul>
+        <li>Name and contact information for order processing</li>
+        <li>Delivery address for shipping</li>
+        <li>Payment information — processed securely, never stored by us</li>
+      </ul>
+      <h3>How We Use It</h3>
+      <p>Your data is used solely to fulfill your order and communicate with you about it. We do not sell or share your data with third parties for marketing purposes.</p>
+      <h3>Contact</h3>
+      <p>For any privacy concerns, reach out to us via Instagram @fit_wear_cmr.</p>`
+  },
+  terms: {
+    title: 'Terms & Conditions',
+    body: `<h3>Orders</h3>
+      <p>All orders are subject to availability. We reserve the right to cancel orders if stock is unavailable, in which case a full refund will be issued.</p>
+      <h3>Pricing</h3>
+      <p>All prices are listed in XAF. Prices may change without prior notice but confirmed orders will always be honoured at the price shown at checkout.</p>
+      <h3>Authenticity</h3>
+      <p>All jerseys sold by Fit Wear are authentic, match-quality replicas sourced from trusted suppliers. We stand behind the quality of every product we sell.</p>
+      <h3>Liability</h3>
+      <p>Fit Wear is not responsible for delays caused by third-party couriers or customs processing for international orders.</p>`
+  }
+};
+function openInfoModal(key) {
+  const data = INFO_CONTENT[key];
+  if (!data) return;
+  document.getElementById('info-modal-title').textContent = data.title;
+  document.getElementById('info-modal-body').innerHTML = data.body;
+  document.getElementById('info-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeInfoModal(e) {
+  if (e.target === document.getElementById('info-modal-overlay')) closeInfoModalForce();
+}
+function closeInfoModalForce() {
+  document.getElementById('info-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
