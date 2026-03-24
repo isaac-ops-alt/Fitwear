@@ -1398,13 +1398,22 @@ section { padding: 6rem 5vw; }
    BRAND STORY
    ============================================================ */
 .story-section {
-  background: var(--dark);
+  background: url('img/logo.jpeg') center/cover no-repeat var(--dark);
+  position: relative;
   padding: 6rem 5vw;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6vw;
   align-items: center;
 }
+.story-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  pointer-events: none;
+}
+.story-section > * { position: relative; z-index: 1; }
 .story-visual {
   position: relative;
   aspect-ratio: 1;
@@ -2643,7 +2652,7 @@ const catColors = {
 const catImages = {
   'Premier League': 'premierleague.jpg',
   'La Liga':        'laliga.jpg',
-  'Bundesliga':     'Bundesliga.jpg',
+  'Bundesliga':     'bundesliga.jpg',
   'Ligue 1':        'ligue1.jpg',
   'National Teams': 'nationalteams.jpg'
 };
