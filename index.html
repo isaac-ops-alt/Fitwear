@@ -34,6 +34,22 @@ body {
   font-weight: 400;
   overflow-x: hidden;
 }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url('img/background.jpg') center/cover no-repeat;
+  z-index: -2;
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: -1;
+  pointer-events: none;
+}
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
 ul { list-style: none; }
@@ -1634,7 +1650,7 @@ footer {
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('home')">Home</a></li>
     <li><a href="#categories" onclick="showPage('home')">Categories</a></li>
-    <li><a href="#" onclick="showPage('shop')">All Jerseys</a></li>
+    <li><a href="#categories" onclick="showPage('home')">All Jerseys</a></li>
     <li><a href="#story" onclick="showPage('home')">Our Story</a></li>
   </ul>
   <div class="nav-actions">
@@ -1773,7 +1789,7 @@ footer {
       </h1>
       <p class="hero-sub">Official jerseys from the world's greatest clubs and nations. Premier League, La Liga, Bundesliga, and more — delivered to your door.</p>
       <div class="hero-ctas">
-        <button class="btn btn-orange btn-lg" onclick="showPage('shop')">Shop All Jerseys</button>
+        <button class="btn btn-orange btn-lg" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Shop All Jerseys</button>
         <button class="btn btn-white" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Browse Leagues</button>
       </div>
       <div class="hero-stats">
@@ -1855,7 +1871,7 @@ footer {
       <div class="section-label">Browse Leagues</div>
       <div class="section-header-row">
         <h2 class="section-title">Pick Your<br><span class="accent">League</span></h2>
-        <button class="btn btn-outline" onclick="showPage('shop')">View All →</button>
+        <button class="btn btn-outline" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">View All →</button>
       </div>
     </div>
     <div class="cat-grid" id="cat-grid-home"></div>
@@ -1867,7 +1883,7 @@ footer {
       <div class="section-label">Most Wanted</div>
       <div class="section-header-row">
         <h2 class="section-title">Best<br><span class="accent">Sellers</span></h2>
-        <button class="btn btn-outline" onclick="showPage('shop')">View All →</button>
+        <button class="btn btn-outline" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">View All →</button>
       </div>
     </div>
     <div class="products-grid" id="bestsellers-grid"></div>
@@ -1879,7 +1895,7 @@ footer {
       <div class="section-label">Just Dropped</div>
       <div class="section-header-row">
         <h2 class="section-title">New<br><span class="accent">Arrivals</span></h2>
-        <button class="btn btn-outline" onclick="showPage('shop')">View All →</button>
+        <button class="btn btn-outline" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">View All →</button>
       </div>
     </div>
     <div class="products-grid" id="new-arrivals-grid"></div>
@@ -1906,7 +1922,7 @@ footer {
       <h2 class="story-title">More Than<br>A<span> Jersey</span></h2>
       <p class="story-body">Fit Wear was built for fans who don't compromise. We stock authentic, match-quality jerseys from every major league — because your team deserves proper representation on and off the pitch.</p>
       <p class="story-body">From Premier League to international duty, every jersey we sell is chosen for quality, craftsmanship, and how good it feels to wear the shirt you love.</p>
-      <button class="btn btn-white" style="margin-top:1.5rem;" onclick="showPage('shop')">Shop Now →</button>
+      <button class="btn btn-white" style="margin-top:1.5rem;" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
       <div class="story-stats">
         <div>
           <div class="story-stat-num">5K+</div>
@@ -2032,36 +2048,6 @@ footer {
   </footer>
 </div><!-- /page-home -->
 
-<!-- ============================================================
-     PAGE: SHOP / CATEGORY
-     ============================================================ -->
-<div id="page-shop" class="page">
-  <div class="cat-view-header" id="shop-header">
-    <div>
-      <div class="cat-view-title" id="shop-title">All <span>Jerseys</span></div>
-      <div class="cat-view-sub" id="shop-sub">Every league. Every team. Your style.</div>
-    </div>
-    <button class="btn btn-white" onclick="showPage('home')">← Back</button>
-  </div>
-  <div class="filter-bar" id="shop-filter-bar">
-    <button class="filter-btn active" onclick="filterShop(this,'all')">All Leagues</button>
-    <button class="filter-btn" onclick="filterShop(this,'Premier League')">Premier League</button>
-    <button class="filter-btn" onclick="filterShop(this,'La Liga')">La Liga</button>
-    <button class="filter-btn" onclick="filterShop(this,'Bundesliga')">Bundesliga</button>
-    <button class="filter-btn" onclick="filterShop(this,'Ligue 1')">Ligue 1</button>
-    <button class="filter-btn" onclick="filterShop(this,'Eredivisie')">Eredivisie</button>
-    <button class="filter-btn" onclick="filterShop(this,'National Teams')">National Teams</button>
-    <select class="sort-select" onchange="sortShop(this.value)">
-      <option value="default">Sort: Featured</option>
-      <option value="price-asc">Price: Low to High</option>
-      <option value="price-desc">Price: High to Low</option>
-      <option value="rating">Top Rated</option>
-    </select>
-  </div>
-  <div style="padding:3rem 5vw 5rem;">
-    <div class="products-grid" id="shop-grid"></div>
-  </div>
-</div>
 
 <!-- ============================================================
      PAGE: PREMIER LEAGUE
@@ -2160,6 +2146,31 @@ footer {
   </div>
   <div style="padding:2.5rem 5vw 5rem;">
     <div class="products-grid" id="national-grid"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: LIGUE 1
+     ============================================================ -->
+<div id="page-ligue-1" class="page">
+  <div class="league-page-header" style="background:linear-gradient(135deg,#0A0A1A 0%,#1a0033 60%,#2d0066 100%);">
+    <div class="league-bg-text">L1</div>
+    <div class="league-page-eyebrow" style="color:#A855F7;">⚽ French Football</div>
+    <h1 class="league-page-title">Ligue<br><span style="color:#A855F7;">1</span></h1>
+    <p class="league-page-sub">5 Clubs · Passion, Flair & Parisian Style</p>
+    <button class="btn btn-white league-back-btn" onclick="showPage('home')">← Back</button>
+  </div>
+  <div class="league-sort-bar">
+    <span class="league-jersey-count">5 Jerseys</span>
+    <select class="sort-select" onchange="sortLeague('Ligue 1', this.value)">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+    </select>
+  </div>
+  <div style="padding:2.5rem 5vw 5rem;">
+    <div class="products-grid" id="ligue1-grid"></div>
   </div>
 </div>
 
@@ -2396,6 +2407,30 @@ const jerseys = [
       {name:'Rui C.', date:'Mar 2025', stars:5, text:'Que camisola linda! Quality is brilliant and fits perfectly.'},
       {name:'Sophie T.', date:'Feb 2025', stars:4, text:'Great shirt, excellent service, fast delivery.'}
     ]
+  },
+  {
+    id:21, league:'National Teams', team:'Ronaldo', name:'Ronaldo GOAT Jersey', price:4500, badge:'New Arrival', newArrival:true,
+    rating:5.0, sizes:['S','M','L','XL'],
+    color1:'#CC0000', color2:'#8B0000', numColor:'#FFD700',
+    img:'img/goatronaldo.jpg',
+    desc:'A tribute to the Greatest of All Time. The Ronaldo GOAT Jersey — celebrating a career that transcended football.',
+    benefits:['Limited-edition GOAT series','Premium embroidered detail','Performance polyester blend','Comes in collector packaging','A piece of football history'],
+    reviews:[
+      {name:'Marco A.', date:'Mar 2025', stars:5, text:'Absolute masterpiece. Every CR7 fan needs this in their collection.'},
+      {name:'Priya S.', date:'Feb 2025', stars:5, text:'The quality is next level. Bought as a gift and they were speechless.'}
+    ]
+  },
+  {
+    id:22, league:'National Teams', team:'Inter Miami', name:'Inter Miami Jersey', price:3500, badge:'New Arrival', newArrival:true,
+    rating:4.9, sizes:['S','M','L','XL'],
+    color1:'#F7B5CD', color2:'#E91E8C', numColor:'#000000',
+    img:'img/intermiami.jpg',
+    desc:'The home of Messi. Inter Miami CF — where MLS met global superstar status. Wear the pink that changed football.',
+    benefits:['Iconic Inter Miami pink and black','Official replica quality','Breathable sport fabric','Slim modern fit','As worn by the greatest player on earth'],
+    reviews:[
+      {name:'Luis M.', date:'Apr 2025', stars:5, text:'Got this for my daughter — she loves Messi and it\'s her favourite shirt now.'},
+      {name:'Dave W.', date:'Mar 2025', stars:5, text:'The pink looks incredible in person. Great quality, fast delivery.'}
+    ]
   }
 ];
 
@@ -2481,6 +2516,7 @@ const categories = [
   { id:'Premier League', label:'Premier League', count:5, bg:'#1A0A0A' },
   { id:'La Liga',        label:'La Liga',        count:3, bg:'#0A0A2A' },
   { id:'Bundesliga',     label:'Bundesliga',     count:3, bg:'#0A1A0A' },
+  { id:'Ligue 1',        label:'Ligue 1',        count:5, bg:'#0A0A1A' },
   { id:'National Teams', label:'National Teams', count:5, bg:'#0A1A1A' }
 ];
 
@@ -2493,19 +2529,29 @@ const catColors = {
   'National Teams':'#003030'
 };
 
+const catImages = {
+  'Premier League': 'premierleague.jpg',
+  'La Liga':        'laliga.jpg',
+  'Bundesliga':     'Bundesliga.jpg',
+  'Ligue 1':        'ligue1.jpg',
+  'National Teams': 'nationalteams.jpg'
+};
+
 function renderCatGrid() {
   const g = document.getElementById('cat-grid-home');
   g.innerHTML = categories.map(cat => {
-    const sample = jerseys.find(j => j.league === cat.id);
-    const svgHtml = sample ? jerseySVG(sample, 100) : '';
+    const imgFile = catImages[cat.id];
+    const imgHtml = imgFile
+      ? `<img src="img/${imgFile}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:0;opacity:0.5;" alt="${cat.label}">`
+      : '';
     return `
-      <div class="cat-card" onclick="filterAndShowShop('${cat.id}')">
+      <div class="cat-card" style="position:relative;" onclick="filterAndShowShop('${cat.id}')">
         <div class="cat-card-inner" style="background:${catColors[cat.id] || '#111'};">
-          <div style="opacity:0.5;filter:drop-shadow(0 10px 30px rgba(255,77,0,0.3));">${svgHtml}</div>
+          ${imgHtml}
         </div>
         <div class="cat-card-overlay"></div>
-        <div class="cat-card-flag">${cat.id === 'National Teams' ? '🌍' : '⚽'}</div>
-        <div class="cat-card-content">
+        <div class="cat-card-flag" style="position:relative;z-index:1;">${cat.id === 'National Teams' ? '🌍' : '⚽'}</div>
+        <div class="cat-card-content" style="position:relative;z-index:1;">
           <div class="cat-name">${cat.label}</div>
           <div class="cat-count">${cat.count} Jerseys</div>
           <div class="cat-cta">Shop Now →</div>
@@ -2531,12 +2577,15 @@ function starsHTML(rating) {
    JERSEY CARD
    ============================================================ */
 function jerseyCardHTML(j) {
-  const badgeHtml = j.badge ? `<div class="jersey-card-badge${j.badge === 'New' || j.badge === 'Best Seller' ? ' orange' : ''}">${j.badge}</div>` : '';
+  const badgeHtml = j.badge ? `<div class="jersey-card-badge${j.badge === 'New' || j.badge === 'Best Seller' || j.badge === 'New Arrival' ? ' orange' : ''}">${j.badge}</div>` : '';
+  const innerContent = j.img
+    ? `<img src="${j.img}" style="width:100%;height:100%;object-fit:cover;" alt="${j.name}">`
+    : jerseySVG(j, 110);
   return `
     <div class="jersey-card" onclick="openModal(${j.id})">
       <div class="jersey-img">
         <div class="jersey-img-inner" style="background:linear-gradient(135deg,${catColors[j.league]||'#111'} 0%,${catColors[j.league]||'#222'} 100%);">
-          ${jerseySVG(j, 110)}
+          ${innerContent}
         </div>
         ${badgeHtml}
         <div class="jersey-card-actions">
@@ -2548,7 +2597,7 @@ function jerseyCardHTML(j) {
         <div class="jersey-league">${j.league}</div>
         <div class="jersey-name">${j.name}</div>
         <div class="jersey-price-row">
-          <div class="jersey-price">£${j.price}</div>
+          <div class="jersey-price">${j.price >= 1000 ? j.price.toLocaleString() + ' XAF' : '£' + j.price}</div>
           <div class="jersey-stars">${starsHTML(j.rating)}</div>
         </div>
         <div class="jersey-sizes">
@@ -2562,12 +2611,12 @@ function jerseyCardHTML(j) {
    RENDER SECTIONS
    ============================================================ */
 function renderBestSellers() {
-  const ids = [18, 1, 6, 16, 12, 19, 4, 9];
+  const ids = [18, 6, 5, 12, 2];
   const g = document.getElementById('bestsellers-grid');
   g.innerHTML = ids.map(id => { const j = jerseys.find(x => x.id === id); return j ? jerseyCardHTML(j) : ''; }).join('');
 }
 function renderNewArrivals() {
-  const ids = [5, 8, 10, 20, 13, 15, 3, 17];
+  const ids = [21, 22];
   const g = document.getElementById('new-arrivals-grid');
   g.innerHTML = ids.map(id => { const j = jerseys.find(x => x.id === id); return j ? jerseyCardHTML(j) : ''; }).join('');
 }
@@ -2579,11 +2628,13 @@ let shopFilter = 'all';
 let shopSort = 'default';
 
 function renderShopGrid() {
+  const grid = document.getElementById('shop-grid');
+  if (!grid) return;
   let list = shopFilter === 'all' ? jerseys : jerseys.filter(j => j.league === shopFilter);
   if (shopSort === 'price-asc') list = [...list].sort((a,b) => a.price - b.price);
   else if (shopSort === 'price-desc') list = [...list].sort((a,b) => b.price - a.price);
   else if (shopSort === 'rating') list = [...list].sort((a,b) => b.rating - a.rating);
-  document.getElementById('shop-grid').innerHTML = list.map(j => jerseyCardHTML(j)).join('');
+  grid.innerHTML = list.map(j => jerseyCardHTML(j)).join('');
 }
 
 function filterShop(btn, filter) {
@@ -2603,23 +2654,16 @@ function filterAndShowShop(league) {
     'Premier League': 'premier-league',
     'La Liga': 'la-liga',
     'Bundesliga': 'bundesliga',
+    'Ligue 1': 'ligue-1',
     'National Teams': 'national-teams'
   };
   if (leaguePageMap[league]) {
     showLeaguePage(league);
     return;
   }
-  shopFilter = league;
-  showPage('shop');
-  setTimeout(() => {
-    document.querySelectorAll('.filter-btn').forEach(b => {
-      b.classList.remove('active');
-      if (b.textContent.trim() === league) b.classList.add('active');
-    });
-    document.getElementById('shop-title').innerHTML = league + ' <span>Jerseys</span>';
-    document.getElementById('shop-sub').textContent = `All ${league} jerseys — gear up for your team.`;
-    renderShopGrid();
-  }, 50);
+  // Fallback: scroll to categories section on home for leagues without a dedicated page
+  document.getElementById('page-home').classList.add('active');
+  setTimeout(() => document.getElementById('categories').scrollIntoView({ behavior: 'smooth' }), 100);
 }
 
 /* ============================================================
@@ -2629,6 +2673,7 @@ const leagueGridIds = {
   'Premier League': 'pl-grid',
   'La Liga': 'laliga-grid',
   'Bundesliga': 'bundesliga-grid',
+  'Ligue 1': 'ligue1-grid',
   'National Teams': 'national-grid'
 };
 let leagueSorts = {};
@@ -2669,13 +2714,19 @@ function openModal(id) {
   selectedSize = 'M';
 
   document.getElementById('modal-img-side').style.background = `linear-gradient(135deg, ${catColors[j.league]||'#111'} 0%, ${catColors[j.league]||'#222'} 100%)`;
-  document.getElementById('modal-img-side').innerHTML = `
-    <div style="filter:drop-shadow(0 20px 40px rgba(255,77,0,0.3));">${jerseySVG(j, 160)}</div>
-    <div class="modal-img-num">${j.id % 11 || 11}</div>
-  `;
+  if (j.img) {
+    document.getElementById('modal-img-side').innerHTML = `
+      <img src="${j.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" alt="${j.name}">
+    `;
+  } else {
+    document.getElementById('modal-img-side').innerHTML = `
+      <div style="filter:drop-shadow(0 20px 40px rgba(255,77,0,0.3));">${jerseySVG(j, 160)}</div>
+      <div class="modal-img-num">${j.id % 11 || 11}</div>
+    `;
+  }
   document.getElementById('modal-league').textContent = j.league + ' · ' + j.team;
   document.getElementById('modal-name').textContent = j.name;
-  document.getElementById('modal-price').textContent = '£' + j.price;
+  document.getElementById('modal-price').textContent = j.price >= 1000 ? j.price.toLocaleString() + ' XAF' : '£' + j.price;
   document.getElementById('modal-stars').innerHTML = starsHTML(j.rating);
   document.querySelector('.modal-desc').textContent = j.desc;
   document.getElementById('modal-qty').textContent = '1';
@@ -2853,19 +2904,16 @@ function showPage(page) {
     'Premier League': 'page-premier-league',
     'La Liga': 'page-la-liga',
     'Bundesliga': 'page-bundesliga',
+    'Ligue 1': 'page-ligue-1',
     'National Teams': 'page-national-teams'
   };
   if (page === 'home') {
     document.getElementById('page-home').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else if (page === 'shop') {
-    document.getElementById('page-shop').classList.add('active');
-    if (shopFilter === 'all') {
-      document.getElementById('shop-title').innerHTML = 'All <span>Jerseys</span>';
-      document.getElementById('shop-sub').textContent = 'Every league. Every team. Your style.';
-    }
-    renderShopGrid();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // All Jerseys page removed — scroll to categories on home instead
+    document.getElementById('page-home').classList.add('active');
+    setTimeout(() => document.getElementById('categories').scrollIntoView({ behavior: 'smooth' }), 100);
   } else if (leaguePageMap[page]) {
     document.getElementById(leaguePageMap[page]).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2899,6 +2947,7 @@ renderShopGrid();
 renderLeaguePage('Premier League');
 renderLeaguePage('La Liga');
 renderLeaguePage('Bundesliga');
+renderLeaguePage('Ligue 1');
 renderLeaguePage('National Teams');
 updateCart();
 </script>
